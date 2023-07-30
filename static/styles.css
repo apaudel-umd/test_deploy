@@ -1,0 +1,28 @@
+body {
+  background-color: rgb(61, 127, 197);
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(47, 75, 112),
+    rgb(52, 179, 242)
+  );
+}
+h1 {
+  color: rgb(255, 255, 255);
+  font-family: verdana;
+  font-size: 300%;
+  text-align: center;
+}
+p {
+  color: rgb(255, 255, 255);
+  font-family: verdana;
+  font-size: 160%;
+}
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 3px;
+}
+.btn {
+    margin: 10px;
+}

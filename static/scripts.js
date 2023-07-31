@@ -38,9 +38,16 @@ document.addEventListener('DOMContentLoaded', function () {
             isTracking = false;
             document.getElementById('status').textContent = 'Not tracking';
             clearInterval(trackingInterval);
-            // Send the recorded data to Flask backend
-            sendDataToFlask();
+            document.getElementById('submitButton').disabled = false;
         }
+    }
+
+    function submit() {
+        // Send the recorded data to Flask backend
+        sendDataToFlask();
+        document.getElementById('status').textContent = 'Data Sent!';
+        dataPoints.length = 0;
+        document.getElementById('submitButton').disabled = true;
     }
 
     function sendDataToFlask() {
@@ -86,4 +93,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('startButton').addEventListener('click', startTracking);
     document.getElementById('stopButton').addEventListener('click', stopTracking);
+    document.getElementById('submitButton').addEventListener('click', submit);
 });

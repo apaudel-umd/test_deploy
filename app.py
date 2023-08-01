@@ -48,7 +48,7 @@ def get_conn():
 
 def insert_loc(name, loc):
     """ insert a new location into the multip_geom_data table """
-    insert_query = '''INSERT INTO multip_geom_data (name, geom) VALUES (%s, %s) RETURNING id;'''
+    insert_query = '''INSERT INTO polygon_geom_data (name, geom) VALUES (%s, %s) RETURNING id;'''
     conn = None
     loc_id = None
     try:

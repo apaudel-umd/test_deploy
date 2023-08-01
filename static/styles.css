@@ -9,13 +9,13 @@ body {
 h1 {
   color: rgb(255, 255, 255);
   font-family: verdana;
-  font-size: 300%;
+  font-size: 200%;
   text-align: center;
 }
 p {
   color: rgb(255, 255, 255);
   font-family: verdana;
-  font-size: 160%;
+  font-size: 120%;
 }
 .center {
     display: flex;
@@ -25,4 +25,11 @@ p {
 }
 .btn {
     margin: 10px;
+}
+.map {
+  display: flex;
+  height: 200px;
+  max-width: 400px;
+  align-items: center;
+  justify-content: center;
 }

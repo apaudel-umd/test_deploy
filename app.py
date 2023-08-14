@@ -25,10 +25,12 @@ def process_data():
     multipoint = MultiPoint(points)
     # Convert the MultiPoint object to a WKB (Well-Known Binary) representation
     wkb_multipoint = dumps(multipoint)
-
-    # Process the received data as needed
-    # ...
-    insert_loc('Flask', wkb_multipoint)
+    
+    # Convert the list of points into a polygon
+    polygon = f"POLYGON(({', '.join([f'{x} {y}' for x, y in points])}, {points[0][0]} {points[0][1]}))"
+    
+    #insert_loc('Flask', wkb_multipoint)
+    insert_loc('Flask', polygon)
     response_data = {'message': 'Data received successfully'}
 
     return jsonify(response_data)
@@ -58,7 +60,7 @@ def insert_loc(name, loc):
         cur = conn.cursor()
         # execute the INSERT statement
         #cur.execute(insert_query, (name, f"MULTIPOINT(({loc}))"))
-        cur.execute(insert_query, (name, psycopg2.Binary(loc)))
+        cur.execute(insert_query, (name, loc))
         # get the generated id back
         loc_id = cur.fetchone()[0]
         # commit the changes to the database

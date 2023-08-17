@@ -2,6 +2,7 @@ import configparser
 import psycopg2
 from shapely.geometry import MultiPoint
 from shapely.wkb import dumps
+from datetime import datetime
 from flask import Flask, request, jsonify, render_template
 
 app = Flask(__name__, static_url_path='')
@@ -16,21 +17,31 @@ def root():
     
 @app.route('/process_data', methods=['POST'])
 def process_data():
-    #data = request.json
-    #data = request.data.decode('utf-8')
     data = request.json
     print(data)
-    points = [(d['longitude'], d['latitude']) for d in data]
-     # Convert the list of points to a MultiPoint object
+    dataPoints = data['dataPoints']
+    formData = data['formData']
+    points = [(d['longitude'], d['latitude']) for d in dataPoints]
+    
+    # data to insert
+    name = formData[0]['value']
+    email = formData[1]['value']
+    item = formData[2]['value']
+    color = formData[3]['value']
+    date = datetime.strptime(formData[4]['value'], '%Y-%m-%d').date()
+    reason = formData[5]['value']
+    extra = formData[6]['value']
+    
+    # Convert the list of points to a MultiPoint object
     multipoint = MultiPoint(points)
-    # Convert the MultiPoint object to a WKB (Well-Known Binary) representation
     wkb_multipoint = dumps(multipoint)
     
     # Convert the list of points into a polygon
     polygon = f"POLYGON(({', '.join([f'{x} {y}' for x, y in points])}, {points[0][0]} {points[0][1]}))"
     
     #insert_loc('Flask', wkb_multipoint)
-    insert_loc('Flask', polygon)
+    loc_id = insert_loc(name, polygon)
+    insert_form(loc_id, name, email, item, color, date, reason, extra)
     response_data = {'message': 'Data received successfully'}
 
     return jsonify(response_data)
@@ -74,6 +85,24 @@ def insert_loc(name, loc):
             conn.close()
 
     return loc_id
+
+def insert_form(loc_id, name, email, item, color, date, reason, extra):
+    insert_query = '''INSERT INTO form_data (loc_id, name, email, item, color, date, reason, extra) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)'''
+    conn = None
+    try:
+        conn = get_conn()
+        cur = conn.cursor()
+        cur.execute(insert_query, (loc_id, name, email, item, color, date, reason, extra))
+        conn.commit()
+        cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+
+    return loc_id
+    
     
 
 if __name__ == '__main__':

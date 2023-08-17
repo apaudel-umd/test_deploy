@@ -30,50 +30,54 @@
         <button id="stopButton" class="btn btn-danger btn-lg">
           Stop Tracking
         </button>
-        <button id="submitButton" class="btn btn-success btn-lg" disabled>
-          Submit
-        </button>
       </div>
-
       <p>Status: <span id="status" class="uk-text-bold">Not tracking</span></p>
     </div>
 
-    <form>
+    <form id="myForm">
       <div class="mb-3">
         <label for="Name" class="form-label">Your Name</label>
-        <input type="text" class="form-text" />
+        <input id="username" type="text" class="form-text" />
       </div>
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Email address</label>
         <input
           type="email"
           class="form-control"
-          id="exampleInputEmail1"
-          aria-describedby="emailHelp"
-        />
+          id="email"
+          aria-describedby="emailHelp"/>
         <div id="emailHelp" class="form-text">
           We'll never share your email with anyone else.
         </div>
       </div>
       <div class="mb-3">
         <label for="Name">Item Marked</label>
-        <input type="text" class="form-text" />
+        <input id="item" type="text" class="form-text" />
       </div>
       <div class="mb-3">
         <label class="form-label">Color</label>
-        <input type="text" class="form-text" />
+        <input id="color" type="text" class="form-text" />
       </div>
       <div class="mb-3">
         <label class="form-label">Date Found</label>
-        <input type="date" class="form-text" />
+        <input id="date" type="date" class="form-text" />
       </div>
       <div class="mb-3">
         <label class="form-label">Reason for Marking</label>
-        <input type="text" class="form-text" />
+        <input id="reason" type="text" class="form-text" />
       </div>
       <div class="mb-3">
         <label class="form-label">Additional Info</label>
-        <input type="text" class="form-text" />
+        <input id="extra" type="text" class="form-text" />
+      </div>
+      <div class="col-12">
+        <button
+          id="submitButton"
+          class="btn btn-success"
+          type="submit"
+          disabled>
+          Submit form
+        </button>
       </div>
     </form>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>

@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let trackingInterval;
     let isTracking = false;
     const dataPoints = [];
+    const formData = [];
 
     // Initialize the map
     var map = L.map('map').setView([0, 0], 13);
@@ -61,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.error("Error getting location:", error.message);
             }
         );
-    }
+    };
 
     function startTracking() {
         if (!isTracking) {
@@ -70,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("status").textContent = "Tracking...";
             trackingInterval = setInterval(updatePosition, 5000); // Update every 5 seconds
         }
-    }
+    };
 
     function stopTracking() {
         if (isTracking) {
@@ -79,7 +80,25 @@ document.addEventListener("DOMContentLoaded", function () {
             clearInterval(trackingInterval);
             document.getElementById("submitButton").disabled = false;
         }
-    }
+    };
+
+    function getFormData() {
+        const username = document.getElementById("username").value;
+        const email = document.getElementById("email").value;
+        const item = document.getElementById("item").value;
+        const color = document.getElementById("color").value;
+        const date = document.getElementById("date").value;
+        const reason = document.getElementById("reason").value;
+        const extra = document.getElementById("extra").value;
+
+        formData.push({name: 'username', value: username});
+        formData.push({name: 'email', value: email});
+        formData.push({name: 'item', value: item});
+        formData.push({name: 'color', value: color});
+        formData.push({name: 'date', value: date});
+        formData.push({name: 'reason', value: reason});
+        formData.push({name: 'extra', value: extra});
+    };
 
     function submit() {
         // Send the recorded data to Flask backend
@@ -87,39 +106,27 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("status").textContent = "Data Sent!";
         dataPoints.length = 0;
         document.getElementById("submitButton").disabled = true;
-    }
+    };
 
     function sendDataToFlask() {
-        // Use fetch API to send data to Flask
-        //let textData = dataPoints.pop().toString();
-        //let count = 1;
-        // while (dataPoints.length > 0) {
-        //     if (count % 2 === 0) {
-        //         textData = dataPoints.pop() + ', ' + textData;
-        //     } else {
-        //         textData = dataPoints.pop() + textData;
-        //     }
-        //     count++;
-        //     };
-
-        // const jsonString = JSON.stringify(dataPoints);
-        // Parse the JSON string into a JavaScript array
-        //const dataArray = JSON.parse(jsonString);
-
-        // Convert the array of objects into the desired format
-        //const formattedString = dataArray
-        //.map(({ longitude, latitude }) => `${longitude} ${latitude}`)
-        //.join(', ');
-
+        
+        getFormData();
         console.log(JSON.stringify(dataPoints));
-        //console.log(formattedString);
+        console.log(JSON.stringify(formData));
+
+        payload = {
+            'dataPoints': dataPoints,
+            'formData': formData
+        };
+
+        console.log(JSON.stringify(payload));
 
         fetch("/process_data", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json", //'text/plain',
             },
-            body: JSON.stringify(dataPoints), // formattedString,
+            body: JSON.stringify(payload), // formattedString,
         })
             .then((response) => response.text())
             .then((data) => {
@@ -128,11 +135,10 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch((error) => {
                 console.error("Error sending data to Flask:", error);
             });
-    }
+    };
 
-    document
-        .getElementById("startButton")
-        .addEventListener("click", startTracking);
+
+    document.getElementById("startButton").addEventListener("click", startTracking);
     document.getElementById("stopButton").addEventListener("click", stopTracking);
     document.getElementById("submitButton").addEventListener("click", submit);
 });
